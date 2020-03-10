@@ -5,7 +5,6 @@ import sys
 from thread import *
 from threading import Thread
 import time
-import cv2
 import numpy as np
 import datetime
 
