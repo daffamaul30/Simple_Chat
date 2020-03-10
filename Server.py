@@ -30,7 +30,6 @@ Pesan = []
 def clientthread(conn, addr):  
     name = conn.recv(20)
     username[addr[0]] = name
-    print(username[addr[0]])
     
     while True: 
         try:
@@ -80,12 +79,9 @@ def rcv_image(conn, addr, pesan):
 
         waktu = "%s:%s" %(tm.hour,tm.minute)
         broadcast(pesan, conn)
-        #conn.send(pesan)
         message_to_send = "<" + username[addr[0]] + "> " + "Sent an image" + "   " + waktu
         broadcast(message_to_send, conn)
-        #conn.send(message_to_send)
         broadcast(data, conn)
-        #conn.send(data)
     else:
         remove(conn)
 
@@ -111,5 +107,3 @@ while True:
     start_new_thread(clientthread,(conn,addr))   
 conn.close() 
 server.close() 
- 
-#python Server.py 192.168.1.17 10002
