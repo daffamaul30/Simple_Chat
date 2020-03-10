@@ -18,15 +18,20 @@ BUFFSIZE = 4096000
 IP_address = ''
 Port = 10002
 server_address = (IP_address,Port)
-print("Waiting for connection on %s Port" % (Port))  
+print("Waiting for connection on Port %s" % (Port))  
 server.bind((server_address)) 
 
 server.listen(100) 
   
+username = {}
 list_of_clients = []
 Pesan = []
   
-def clientthread(conn, addr):      
+def clientthread(conn, addr):  
+    name = conn.recv(20)
+    username[addr[0]] = name
+    print(username[addr[0]])
+    
     while True: 
         try:
             pesan = conn.recv(BUFFSIZE).decode("utf8")
@@ -42,6 +47,7 @@ def clientthread(conn, addr):
 def rcv_history(conn, addr):
     kodek = 'histori'
     conn.send(kodek)
+    print("HISTORY : ")
     for i in range(0,len(Pesan)):
         print(Pesan[i])
         conn.send(Pesan[i]+"#")
@@ -50,14 +56,14 @@ def rcv_text(conn, addr, pesan):
     if pesan:
         tmp = pesan.split('#')
         localtime = time.ctime()
-        psn = localtime + " " + " <" + addr[0] + "> " + tmp[1]
+        psn = localtime + " " + " <" + username[addr[0]] + "> " + tmp[1]
         print(psn)
         Pesan.append(psn)
 
         tm = datetime.datetime.now()
         waktu = "%s:%s" %(tm.hour,tm.minute)
 
-        message_to_send = "teks" + "#" + "<" + addr[0] + "> " + tmp[1] + "   " + waktu
+        message_to_send = "teks" + "#" + "<" + username[addr[0]] + "> " + tmp[1] + "   " + waktu
         broadcast(message_to_send, conn) 
     else: 
         remove(conn) 
@@ -67,7 +73,7 @@ def rcv_image(conn, addr, pesan):
         data = conn.recv(BUFFSIZE)
 
         localtime = time.ctime()
-        psn = localtime + " " + " <" + addr[0] + "> " + "Sent an imageee"
+        psn = localtime + " " + " <" + username[addr[0]] + "> " + "Sent an imageee"
         print(psn)
         Pesan.append(psn)
         tm = datetime.datetime.now()
@@ -75,7 +81,7 @@ def rcv_image(conn, addr, pesan):
         waktu = "%s:%s" %(tm.hour,tm.minute)
         broadcast(pesan, conn)
         #conn.send(pesan)
-        message_to_send = "<" + addr[0] + "> " + "Sent an image" + "   " + waktu
+        message_to_send = "<" + username[addr[0]] + "> " + "Sent an image" + "   " + waktu
         broadcast(message_to_send, conn)
         #conn.send(message_to_send)
         broadcast(data, conn)
