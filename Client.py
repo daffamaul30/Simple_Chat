@@ -83,7 +83,7 @@ class App(Frame):
         #membuat space untuk menampilkan pesan
         self.messages_frame = Frame(self)#membuat frame
         self.scrollbar = Scrollbar(self.messages_frame)#membuat scrollbar di dalam frame
-        self.msg_list = Listbox(self.messages_frame, height=16, width=60, yscrollcommand=self.scrollbar.set, font="Helvetica 8")membuat listbox di dalam frame untuk menampilkan pesan
+        self.msg_list = Listbox(self.messages_frame, height=16, width=60, yscrollcommand=self.scrollbar.set, font="Helvetica 8")#membuat listbox di dalam frame untuk menampilkan pesan
         self.scrollbar.pack(side=RIGHT, fill=Y)#memposisikan scrollbar di kanan frame
         self.msg_list.pack(side=LEFT, fill=BOTH)#memposisikan listbox di kiri frame
         self.msg_list.pack()
