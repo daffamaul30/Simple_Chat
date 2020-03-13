@@ -1,7 +1,4 @@
 import socket 
-import pickle
-import select 
-import sys 
 from thread import *
 import time
 import numpy as np
@@ -74,17 +71,21 @@ def rcv_image(conn, addr, pesan):
     if pesan:
         data = conn.recv(BUFFSIZE) #menerima data dari client
 
+        tm = datetime.datetime.now() #mengambil nilai waktu dengan format yang berbeda dengan sebelumnya
+        waktu = "%s:%s" %(tm.hour,tm.minute) #mengambil nilai jam dan menit
+        broadcast(pesan, conn)  #kirim kembali pesan yang dikirim client, ke client lain dengan function broadcast
+        #conn.send(pesan) #jika mau test 1 client saja
+        message_to_send = "<" + username[addr[0]] + "> " + "Sent an image" + "   " + waktu  #menggabungkan kode#,username, pesan dan waktu
+        broadcast(message_to_send, conn) #kirim message_to_send ke client lain dengan function broadcast
+        #conn.send(message_to_send) #jika mau test 1 client saja
+
         localtime = time.ctime() #mengambil nilai waktu saat ini
         psn = localtime + " " + " <" + username[addr[0]] + "> " + "Sent an imageee" #menggabungkan localtime,username dan pesan
         print(psn)
         Pesan.append(psn) #menambahkan psn ke list Pesan
 
-        tm = datetime.datetime.now() #mengambil nilai waktu dengan format yang berbeda dengan sebelumnya
-        waktu = "%s:%s" %(tm.hour,tm.minute) #mengambil nilai jam dan menit
-        broadcast(pesan, conn)  #kirim kembali pesan yang dikirim client, ke client lain dengan function broadcast
-        message_to_send = "<" + username[addr[0]] + "> " + "Sent an image" + "   " + waktu  #menggabungkan kode#,username, pesan dan waktu
-        broadcast(message_to_send, conn) #kirim message_to_send ke client lain dengan function broadcast
         broadcast(data, conn) #kirim data yang dikirimkan client, ke client lain dengan function broadcast
+        #conn.send(data) #jika mau test 1 client saja
     else:
         remove(conn)
 

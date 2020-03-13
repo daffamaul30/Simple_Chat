@@ -4,8 +4,6 @@ from threading import Thread
 import socket
 from socket import AF_INET, SOCK_STREAM
 import datetime
-import random
-from random import randint
 import io
 
 #membuat Window Connect dengan class connect() untuk connect ke server dan menginputkan username
@@ -16,7 +14,7 @@ class connect(Frame):
         Frame.__init__(self, parent)
         self.tampil = parent
         self.tampil.configure(bg='#fcba03') #mengubah warna background
-        self.tampil.iconbitmap(r'C:\Users\ASUS\Downloads\Simple_Chat\i.ico') #mengubah icon window (atur sesuai direktori penyimpanan file .ico)
+        #self.tampil.iconbitmap(r'C:\Users\ASUS\Downloads\Simple_Chat\i.ico') #mengubah icon window (atur sesuai direktori penyimpanan file .ico)
         self.tampil.title('Connect') #mengubah title window
         self.tampil.geometry("200x100+660+350") #mengubah size dan posisi window
         self.tampil.resizable(0, 0) #agar size window tidak dapat dirubah
@@ -55,7 +53,7 @@ class App(Frame):
     def __init__(self, parent):
         Frame.__init__(self, parent, background='#fcba03')
         self.tampilan = parent
-        self.tampilan.iconbitmap(r'C:\Users\ASUS\Downloads\Simple_Chat\i.ico')
+        #self.tampilan.iconbitmap(r'C:\Users\ASUS\Downloads\Simple_Chat\i.ico')
         self.tampilan.title("Chatto")
         self.pack(fill=BOTH, expand=1)
         self.tampilan.geometry("400x500+560+150")
@@ -154,21 +152,22 @@ class App(Frame):
             elif kode[0]=="gambar": #kondisi ketika kode = gambar
                 basename = 'image%s.png' #set basename
                 try:
-                    rec = server.recv(28) #menerima pesan "sent an image"
-                    self.msg_list.insert(END, rec) #memasukkan pesan ke msg_list
-                    data = server.recv(self.BUFFSIZE) #menerima pesan dari server
-                    myfile = open(basename % count, 'wb') #open file dengan nama sesuai basename dan count
-                    myfile.write(data) #menulis data pada myfile(file yang sudah diopen tadi)
-                    myfile.close() #menutup myfile
+                    rec = server.recv(40) #menerima pesan "sent an image"
+                    if rec:
+                        self.msg_list.insert(END, rec) #memasukkan pesan ke msg_list
+                        data = server.recv(self.BUFFSIZE) #menerima pesan dari server
+                        myfile = open(basename % count, 'wb') #open file dengan nama sesuai basename dan count
+                        myfile.write(data) #menulis data pada myfile(file yang sudah diopen tadi)
+                        myfile.close() #menutup myfile
 
-                    #menampilkan popup gambar
-                    top = Toplevel()
-                    diagrams = PhotoImage(file='image' +str(count)+ '.png')
-                    logolbl= Label(top, image = diagrams)
-                    logolbl.grid()
-                    top.mainloop()
+                        #menampilkan popup gambar
+                        top = Toplevel()
+                        diagrams = PhotoImage(file='image' +str(count)+ '.png')
+                        logolbl= Label(top, image = diagrams)
+                        logolbl.grid()
+                        top.mainloop()
 
-                    count+=1 #count bertambah
+                        count+=1 #count bertambah
                 except:
                     continue
             elif code=="histori": #ketika kode = histori
