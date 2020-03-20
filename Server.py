@@ -1,5 +1,6 @@
 import socket 
-from thread import *
+#from thread import *
+from threading import Thread
 import time
 import numpy as np
 import datetime
@@ -110,6 +111,8 @@ while True:
     list_of_clients.append(conn) #memasukkan conn ke list_of_clients
     print (addr[0] + " connected")
     
-    start_new_thread(clientthread,(conn,addr)) #menjalankan function clientthread dengan thread  
+    receive_thread = Thread(target=clientthread(conn,addr)) #menggunakan thread untuk menjalankan function recieve pada class app
+    receive_thread.start()
+    #start_new_thread(clientthread,(conn,addr)) #menjalankan function clientthread dengan thread  
 conn.close() 
 server.close() 
